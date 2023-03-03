@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/image-finder-modal-lifecycle/static/css/main.7acaea2f.css",
+    "main.js": "/image-finder-modal-lifecycle/static/js/main.07d3183d.js",
+    "index.html": "/image-finder-modal-lifecycle/index.html",
+    "main.7acaea2f.css.map": "/image-finder-modal-lifecycle/static/css/main.7acaea2f.css.map",
+    "main.07d3183d.js.map": "/image-finder-modal-lifecycle/static/js/main.07d3183d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7acaea2f.css",
+    "static/js/main.07d3183d.js"
+  ]
+}
