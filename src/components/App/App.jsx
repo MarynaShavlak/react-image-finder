@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from "./App.styled";
 import { ToastContainer } from 'react-toastify';
 import { Layout } from 'components/Layout';
@@ -13,81 +13,64 @@ import { renderIcons } from 'utils/renderIcons';
 import { iconSize } from 'constants';
 
 
-console.log('hfff');
 
-export class App extends Component {
-  state = {
-    images: [],
-    query: '',
-    page: 1,
-    showLoadMoreBtn: false,
-    isLoading: false,
-    error: false,
-  }
-  
 
-  async componentDidUpdate(_, prevState) {
-    const { query, page } = this.state;
- 
+export const App = () => {
+  const [images, setImages] = useState([]);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [showLoadMoreBtn, setShowLoadMoreBtn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-   if (prevState.query !== query || prevState.page !== page) {
-     try {
-      this.setState({ isLoading: true })
+
+  useEffect(() => {
+    if (!query) return;
+    async function fetchImages(){
+      try {
+      setIsLoading(true);
        const response = await API.requestImages(query, page);
        const { hits: images, totalHits: maxQuantityOfImagesToShow } = response;
 
        if (images.length === 0) {
          return Notification.showFailureNotification();
        }
-
-
-      this.setState(prevState => ({
-        images: [...prevState.images, ...images],
-        showLoadMoreBtn: true,
-        error: false,
-      }));
+        setImages(prevImages => [...prevImages, ...images]);
+        setShowLoadMoreBtn(true);
+        setError(false);
        
        if (page === 1) {
          Notification.showSuccessNotification(maxQuantityOfImagesToShow);
        }
 
        if (page === Math.ceil(maxQuantityOfImagesToShow / 12)) {
-         this.setState({showLoadMoreBtn: false});
+         setShowLoadMoreBtn(false);
          Notification.showInfoNotification();
       }
 
      } catch(error) {
-       this.setState({error: true})
+       setError(true);
      } finally {
        
-      this.setState({ isLoading: false })
+      setIsLoading(false);
     }
     }
-  }
-  
-  handleSetSearchQuery=(searchedQuery) => {
-    this.setState({
-      query: searchedQuery,
-      page: 1,
-      images: [],
-    });
-  }
+    fetchImages();
+  },[page, query]
+)
 
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }))
+  const handleSetSearchQuery = (searchedQuery) => {
+    setQuery(searchedQuery);
+    setPage(1);
+    setImages([]);
   }
 
-
-
-
-  render() {
-    const { images, showLoadMoreBtn, isLoading, error } = this.state;
-
+  const updatePage = () => {
+    setPage(prevPage => prevPage + 1);
+  }
     return (
       <Layout>
-        <SearchBar onSubmit ={this.handleSetSearchQuery}></SearchBar>
+        <SearchBar onSubmit ={handleSetSearchQuery}></SearchBar>
         <Container>
           {error &&
             <ErrorMessage>
@@ -99,7 +82,7 @@ export class App extends Component {
             <>
             <ImageGallery images={images}></ImageGallery>
              
-            {showLoadMoreBtn && <LoadMoreButton onClick={this.handleLoadMore}></LoadMoreButton>}
+            {showLoadMoreBtn && <LoadMoreButton onClick={updatePage}></LoadMoreButton>}
             </>
           }
           {isLoading && <Loader/> }
@@ -115,6 +98,6 @@ export class App extends Component {
       </Layout>
       
     );
-  }
+
   
 };

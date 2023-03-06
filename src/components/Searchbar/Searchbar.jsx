@@ -1,50 +1,44 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { SearchFilter, SearchForm, SearchFormButton, SearchFormInput } from './Searchbar.styled';
 import { renderIcons } from 'utils/renderIcons';
 import { iconSize } from 'constants';
 import * as Notification from 'utils/notifications';
 
-export class SearchBar extends Component {
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
+export const SearchBar =({onSubmit}) => {
+  const [query, setQuery] = useState('');
+
+  const handleInputChange = ({ target: { name, value } }) => {
+    setQuery(value.toLowerCase());
   }
 
-  state = {
-    query: '',
-  }
-
-  handleInputChange = ({ target: { name, value } }) => {
-    this.setState({[name]: value.toLowerCase()})
-  }
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (this.state.query.trim() === '') {
+    if (query.trim() === '') {
       return Notification.showWarnNotification();;
     }
 
-    this.props.onSubmit(this.state.query);
-    this.reset();
+    onSubmit(query);
+    reset();
   }
 
-  reset() {
-    this.setState({query: ''})
+  const reset = () => {
+   setQuery('')
   }
 
-  render() {
+ 
     return (
       <SearchFilter>
-      <SearchForm onSubmit={this.handleSubmit}>
+      <SearchForm onSubmit={handleSubmit}>
           <SearchFormInput
           type="text"
           autocomplete="off"
           autoFocus
           placeholder="Search images and photos"
           name="query"
-          value={this.state.query}
-          onChange={this.handleInputChange}
+          value={query}
+          onChange={handleInputChange}
           />          
           <SearchFormButton type='submit' aria-label='Search button'>
             {renderIcons('search', iconSize.sm)}
@@ -54,4 +48,8 @@ export class SearchBar extends Component {
     )
 }
 
-}
+
+
+SearchBar.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  }
