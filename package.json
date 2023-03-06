@@ -1,8 +1,8 @@
 {
-  "name": "image-finder-modal-lifecycle",
+  "name": "goit-react-hw-04-images",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://MarynaShavlak.github.io/image-finder-modal-lifecycle/",
+  "homepage": "https://MarynaShavlak.github.io/goit-react-hw-04-images/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
