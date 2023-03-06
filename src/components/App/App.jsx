@@ -11,7 +11,7 @@ import * as API from 'services/api';
 import * as Notification from 'utils/notifications';
 import { renderIcons } from 'utils/renderIcons';
 import { iconSize } from 'constants';
-
+console.log('h');
 export class App extends Component {
   state = {
     images: [],
